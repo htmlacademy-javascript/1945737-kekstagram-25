@@ -11,11 +11,11 @@ const picturesArr = generateIdentifies();
 const pictureFragment = document.createDocumentFragment();
 
 picturesArr.forEach(({url, likes, comments}) => {
-    const picture = pictureTemplate.cloneNode(true);
-    picture.querySelector('.picture__img').src = url;
-    picture.querySelector('.picture__likes') = likes;
-    picture.querySelector('.picture__comments') = comments;
-    pictureFragment.append(picture);
+  const picture = pictureTemplate.cloneNode(true);
+  picture.querySelector('.picture__img').src = url;
+  picture.querySelector('.picture__likes').like = likes;
+  picture.querySelector('.picture__comments').comment = comments;
+  pictureFragment.append(picture);
 });
 
 pics.append(pictureFragment);
