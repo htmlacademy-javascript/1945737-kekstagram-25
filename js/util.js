@@ -7,8 +7,15 @@ const getRandomInteger = (min,max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-function maxLenghtString (string,maxLenght) {
+function maxLengthString (string,maxLenght) {
   return string.length <= maxLenght;
 }
 
-export {getRandomInteger, getRandomArrayElement, maxLenghtString};
+const getTemplate = function (templateID, contentTag) {
+  const template = document.querySelector(templateID).content;
+  const content = template.querySelector(contentTag);
+  const clonedContent = content.cloneNode(true);
+  return clonedContent;
+};
+
+export {getRandomInteger, getRandomArrayElement, maxLengthString, getTemplate};
