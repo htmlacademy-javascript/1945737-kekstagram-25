@@ -1,3 +1,5 @@
+import {bigPicture} from './big-picture.js';
+
 const getRandomInteger = (min,max) => {
   min = Math.abs(min);
   max = Math.abs(max);
@@ -18,4 +20,10 @@ const getTemplate = function (templateID, contentTag) {
   return clonedContent;
 };
 
-export {getRandomInteger, getRandomArrayElement, maxLengthString, getTemplate};
+const toggleVisibleBigPicture = (flag, className) => {
+  const action = flag ? 'remove': 'add';
+  bigPicture.classList[action](className);
+
+};
+
+export {getRandomInteger, getRandomArrayElement, maxLengthString, getTemplate, toggleVisibleBigPicture};
