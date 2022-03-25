@@ -26,4 +26,15 @@ const toggleVisibleBigPicture = (flag, className) => {
 
 };
 
-export {getRandomInteger, getRandomArrayElement, maxLengthString, getTemplate, toggleVisibleBigPicture};
+const pressEscape = (evt) => {
+  return evt.key === 'Escape';
+};
+
+export {
+  getRandomInteger,
+  getRandomArrayElement,
+  maxLengthString,
+  getTemplate,
+  toggleVisibleBigPicture,
+  pressEscape
+};

@@ -66,4 +66,4 @@ const closeBigPicture = () => {
 
 const isClose = bigPicture.classList.contains('hidden');
 
-export {openBigPicture, closeBigPicture, bigPicture, isClose};
+export {openBigPicture, closeBigPicture, bigPicture, isClose, body};
