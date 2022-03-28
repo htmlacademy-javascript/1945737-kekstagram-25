@@ -1,7 +1,7 @@
-import {openBigPicture, closeBigPicture} from './big-picture.js';
+import {openBigPicture, closeBigPicture, isCloseBigPicture} from './big-picture.js';
 import {generateIdentifies} from './data.js';
 import {generateCard} from './user-photos.js';
-import './form.js';
+import {closeForm, isActiveDescription, isActiveHashtag, isCloseForm} from './form.js';
 import './validation.js';
 
 const pics = document.querySelector('.pictures');
@@ -22,14 +22,17 @@ const onGlobalClick = (evt) => {
 
   if (element.closest('.cancel')) {
     closeBigPicture();
+    closeForm();
   }
 };
 
 const onGlobalKeyDown = (evt) => {
   const key = evt.keyCode;
-  if (key === 27) {
+  if (key === 27 && !isCloseBigPicture) {
     closeBigPicture();
-
+  }
+  if (key === 27 && !isCloseForm && !isActiveHashtag && !isActiveDescription) {
+    closeForm();
   }
 };
 

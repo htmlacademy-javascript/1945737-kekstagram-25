@@ -26,15 +26,16 @@ const toggleVisibleBigPicture = (flag, className) => {
 
 };
 
-const pressEscape = (evt) => {
-  return evt.key === 'Escape';
-};
+/*const toggleVisibleForm = (flag, className) => {
+  const action = flag ? 'remove': 'add';
+  modalPhotoRedactor.classList[action](className);
+
+};*/
 
 export {
   getRandomInteger,
   getRandomArrayElement,
   maxLengthString,
   getTemplate,
-  toggleVisibleBigPicture,
-  pressEscape
+  toggleVisibleBigPicture
 };

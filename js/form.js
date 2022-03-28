@@ -1,5 +1,5 @@
 import {body} from './big-picture.js';
-import {pressEscape} from './util.js';
+import {textHashtags, textDescription} from './validation.js';
 
 
 const file = document.querySelector('#upload-file');
@@ -40,19 +40,24 @@ scaleControlSmaller.addEventListener('click', () => {
 
 
 //закрыть модалку
-const buttonCancel = document.querySelector('#upload-cancel');
+const isCloseForm = modalPhotoRedactor.classList.contains('hidden');
 
-buttonCancel.addEventListener ('click', () => {
-  modalPhotoRedactor.classList.add('hidden');
+const closeForm = () => {
   body.classList.remove('modal-open');
-});
+  modalPhotoRedactor.classList.add('hidden');
+};
 
 
-document.addEventListener('keydown', (evt) => {
-  if (pressEscape(evt)) {
+//document.addEventListener('keydown', (evt) => {
+//const fieldFocus = () => {
+const isActiveHashtag = document.activeElement === textHashtags;
+const isActiveDescription = document.activeElement === textDescription;
+
+/*  if (pressEscape(evt) && !isActiveHashtag && !isActiveDescription) {
     evt.preventDefault();
     modalPhotoRedactor.classList.add('hidden');
     body.classList.remove('modal-open');
   }
-});
+*/
 
+export {closeForm, isActiveHashtag, isActiveDescription, isCloseForm};
