@@ -1,7 +1,8 @@
-import {openBigPicture, closeBigPicture} from './big-picture.js';
+import {openBigPicture, closeBigPicture, isCloseBigPicture} from './big-picture.js';
 import {generateIdentifies} from './data.js';
 import {generateCard} from './user-photos.js';
-
+import {closeForm, canCloseForm} from './form.js';
+import './validation.js';
 
 const pics = document.querySelector('.pictures');
 
@@ -16,23 +17,24 @@ generateIdentifies.forEach((cardData) => {
   pics.append(card);
 });
 
-const handleGlobalClick = (evt) => {
+const onGlobalClick = (evt) => {
   const element = evt.target;
 
   if (element.closest('.cancel')) {
     closeBigPicture();
+    closeForm();
   }
 };
 
-const handleGlobalKeyDown = (evt) => {
+const onGlobalKeyDown = (evt) => {
   const key = evt.keyCode;
-  if (key === 27) {
-    //const target = evt.target;
-    //if (target.className !== 'cancel') {return;}
+  if (key === 27 && !isCloseBigPicture()) {
     closeBigPicture();
-
+  }
+  if (key === 27 && canCloseForm()) {
+    closeForm();
   }
 };
 
-document.addEventListener('click', handleGlobalClick);
-document.addEventListener('keydown', handleGlobalKeyDown);
+document.addEventListener('click', onGlobalClick);
+document.addEventListener('keydown', onGlobalKeyDown);

@@ -21,8 +21,9 @@ const commentsLoader = bigPicture.querySelector(SELECTORS.commentsLoader);
 const descriptionsText = bigPicture.querySelector(SELECTORS.description);
 const body = document.body;
 
-commentsLoader.classList.add('hidden');
-socialComment.classList.add('hidden');
+
+// commentsLoader.classList.add('hidden');
+// socialComment.classList.add('hidden');
 
 const generateCommentLayout = (src, alt, description) => {
   const comment = document.createElement('li');
@@ -41,6 +42,7 @@ const generateCommentLayout = (src, alt, description) => {
   return comment;
 };
 
+//const delTextHTML = socialComment.removeChild('5 из ');
 
 const openBigPicture = ({description, comment, likes, url}) => {
   body.classList.add('modal-open');
@@ -48,22 +50,45 @@ const openBigPicture = ({description, comment, likes, url}) => {
   image.src = url;
   descriptionsText.textContent = description;
   likeCount.textContent = likes;
-  commentCount.textContent = comment.length;
+  // socialComment.textContent = '';
+  // socialComment.textContent = `5 из ${  comment.length} комментариев`;
 
-  comment.forEach((data) => {
+  // commentsLoader.classList.remove('hidden');
+
+  // if (comment.length <= 5) {
+  //   socialComment.textContent = `${comment.length} из ${comment.length} комментариев`;
+  //   commentsLoader.classList.add('hidden');
+  // }
+
+  comment.forEach((data, index) => {
     const {name, message, avatar} = data;
     const commentNode = generateCommentLayout(avatar, name, message);
+    // if ( i > 4) {
+    //   commentNode.style.display = 'none';
+    //   commentCount.textContent = `5 из ${  comment.length} комментариев`;
+    // }
     comments.append(commentNode);
   });
 
   toggleVisibleBigPicture(true, 'hidden');
 };
 
+
+// commentsLoader.addEventListener('click', () => {
+//   const elements = comments.children;
+//   for (let i = 0; i < elements.length; i++) {
+//     const el = elements[i];
+//     el.style.display = 'flex';
+//   }
+//   commentsLoader.classList.add('hidden');
+//   commentCount.textContent = `${elements.length  } из ${  elements.length}`;
+// });
+
 const closeBigPicture = () => {
   body.classList.remove('modal-open');
   toggleVisibleBigPicture(false, 'hidden');
 };
 
-const isClose = bigPicture.classList.contains('hidden');
+const isCloseBigPicture = () => bigPicture.classList.contains('hidden');
 
-export {openBigPicture, closeBigPicture, bigPicture, isClose};
+export {openBigPicture, closeBigPicture, bigPicture, isCloseBigPicture, body};
