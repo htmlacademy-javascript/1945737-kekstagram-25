@@ -60,7 +60,7 @@ const openBigPicture = ({description, comment, likes, url}) => {
   //   commentsLoader.classList.add('hidden');
   // }
 
-  comment.forEach((data, i) => {
+  comment.forEach((data, index) => {
     const {name, message, avatar} = data;
     const commentNode = generateCommentLayout(avatar, name, message);
     // if ( i > 4) {

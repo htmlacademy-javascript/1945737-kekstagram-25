@@ -20,9 +20,6 @@ file.addEventListener('change', (evt) => {
 
 });
 
-//как реализовать не понимаю
-URL.revokeObjectURL(photo.src);
-
 /*const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 
 scaleControlSmaller.addEventListener('click', () => {
