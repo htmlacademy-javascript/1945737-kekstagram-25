@@ -22,9 +22,6 @@ const descriptionsText = bigPicture.querySelector(SELECTORS.description);
 const body = document.body;
 
 
-// commentsLoader.classList.add('hidden');
-// socialComment.classList.add('hidden');
-
 const generateCommentLayout = (src, alt, description) => {
   const comment = document.createElement('li');
   comment.classList.add('social__comment');
@@ -42,31 +39,29 @@ const generateCommentLayout = (src, alt, description) => {
   return comment;
 };
 
-//const delTextHTML = socialComment.removeChild('5 из ');
-
 const openBigPicture = ({description, comment, likes, url}) => {
   body.classList.add('modal-open');
   comments.innerHTML = '';
   image.src = url;
   descriptionsText.textContent = description;
   likeCount.textContent = likes;
-  // socialComment.textContent = '';
-  // socialComment.textContent = `5 из ${  comment.length} комментариев`;
+  socialComment.textContent = '';
+  socialComment.textContent = `5 из ${  comment.length} комментариев`;
 
-  // commentsLoader.classList.remove('hidden');
+  commentsLoader.classList.remove('hidden');
 
-  // if (comment.length <= 5) {
-  //   socialComment.textContent = `${comment.length} из ${comment.length} комментариев`;
-  //   commentsLoader.classList.add('hidden');
-  // }
+  if (comment.length <= 5) {
+    socialComment.textContent = `${comment.length} из ${comment.length} комментариев`;
+    commentsLoader.classList.add('hidden');
+  }
 
-  comment.forEach((data, index) => {
+  comment.forEach((data, comentNumber) => {
     const {name, message, avatar} = data;
     const commentNode = generateCommentLayout(avatar, name, message);
-    // if ( i > 4) {
-    //   commentNode.style.display = 'none';
-    //   commentCount.textContent = `5 из ${  comment.length} комментариев`;
-    // }
+    if (comentNumber > 4) {
+      commentNode.style.display = 'none';
+      commentCount.textContent = `5 из ${  comment.length} комментариев`;
+    }
     comments.append(commentNode);
   });
 
@@ -74,15 +69,15 @@ const openBigPicture = ({description, comment, likes, url}) => {
 };
 
 
-// commentsLoader.addEventListener('click', () => {
-//   const elements = comments.children;
-//   for (let i = 0; i < elements.length; i++) {
-//     const el = elements[i];
-//     el.style.display = 'flex';
-//   }
-//   commentsLoader.classList.add('hidden');
-//   commentCount.textContent = `${elements.length  } из ${  elements.length}`;
-// });
+commentsLoader.addEventListener('click', () => {
+  const elements = comments.children;
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements[i];
+    el.style.display = 'flex';
+  }
+  commentsLoader.classList.add('hidden');
+  commentCount.textContent = `${elements.length  } из ${  elements.length}`;
+});
 
 const closeBigPicture = () => {
   body.classList.remove('modal-open');
