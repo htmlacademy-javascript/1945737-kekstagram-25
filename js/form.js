@@ -40,24 +40,18 @@ scaleControlSmaller.addEventListener('click', () => {
 
 
 //закрыть модалку
-const isCloseForm = modalPhotoRedactor.classList.contains('hidden');
+
 
 const closeForm = () => {
   body.classList.remove('modal-open');
   modalPhotoRedactor.classList.add('hidden');
 };
 
+const canCloseForm = () => {
+  const isCloseForm = modalPhotoRedactor.classList.contains('hidden');
+  const isActiveHashtag = document.activeElement === textHashtags;
+  const isActiveDescription = document.activeElement === textDescription;
+  return !isCloseForm && !isActiveHashtag && !isActiveDescription;
+};
 
-//document.addEventListener('keydown', (evt) => {
-//const fieldFocus = () => {
-const isActiveHashtag = document.activeElement === textHashtags;
-const isActiveDescription = document.activeElement === textDescription;
-
-/*  if (pressEscape(evt) && !isActiveHashtag && !isActiveDescription) {
-    evt.preventDefault();
-    modalPhotoRedactor.classList.add('hidden');
-    body.classList.remove('modal-open');
-  }
-*/
-
-export {closeForm, isActiveHashtag, isActiveDescription, isCloseForm};
+export {closeForm, canCloseForm};

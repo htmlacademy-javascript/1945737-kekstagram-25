@@ -89,6 +89,6 @@ const closeBigPicture = () => {
   toggleVisibleBigPicture(false, 'hidden');
 };
 
-const isCloseBigPicture = bigPicture.classList.contains('hidden');
+const isCloseBigPicture = () => bigPicture.classList.contains('hidden');
 
 export {openBigPicture, closeBigPicture, bigPicture, isCloseBigPicture, body};
