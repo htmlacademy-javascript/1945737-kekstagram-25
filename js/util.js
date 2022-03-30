@@ -26,12 +26,6 @@ const toggleVisibleBigPicture = (flag, className) => {
 
 };
 
-/*const toggleVisibleForm = (flag, className) => {
-  const action = flag ? 'remove': 'add';
-  modalPhotoRedactor.classList[action](className);
-
-};*/
-
 export {
   getRandomInteger,
   getRandomArrayElement,
