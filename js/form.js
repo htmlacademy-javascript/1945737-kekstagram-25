@@ -20,23 +20,60 @@ file.addEventListener('change', (evt) => {
 
 });
 
-/*const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+const scaleControlButtons = document.querySelector('.img-upload__scale');
+const scaleControlSmaller = scaleControlButtons.querySelector('.scale__control--smaller');
+const scaleControlBigger = scaleControlButtons.querySelector('.scale__control--bigger');
 
-scaleControlSmaller.addEventListener('click', () => {
-    const step = 0.25;
-    const value = scaleControlValue.value;
-    const newValue = parseInt(value, 10) - step;
-    if (newValue<0) {
+const step = 25;
 
-        return;
-    }
+function onClickScContrSmall () {
+  const value = scaleControlValue.value;
+  const newValue = parseInt(value, 10) - step;
+  if (newValue <= 0) {
+    return;
+  }
+  scaleControlValue.value = `${newValue  }%`;
+  photo.style.transform = `scale(${newValue/100})`;
+}
 
-    value = newValue;
-    photo.style.transform = `scale(${newValue/100})`;
-});*/
+function onClickScContrBig () {
+  const value = scaleControlValue.value;
+  const newValue = parseInt(value, 10) + step;
+  if (newValue > 100) {
+    return;
+  }
+  scaleControlValue.value = `${newValue  }%`;
+  photo.style.transform = `scale(${newValue/100})`;
+}
 
 
-//закрыть модалку
+scaleControlSmaller.addEventListener('click',onClickScContrSmall);
+scaleControlBigger.addEventListener('click',onClickScContrBig);
+
+//эффекты
+const effectRadio = modalPhotoRedactor.querySelectorAll('.effects__radio');
+const effectsPreviews = modalPhotoRedactor.querySelectorAll('.effects__preview');
+
+
+const previewsSelectors = [
+  '.effects__preview--none',
+  '.effects__preview--chrome',
+  '.effects__preview--sepia',
+  '.effects__preview--marvin',
+  '.effects__preview--phobos',
+  '.effects__preview--heat'
+];
+
+const onClickEffect = function (effectsPreview, previewsSelector) {
+  effectsPreview.addEventListener('click', ()=> {
+    photo.classList.add(previewsSelector);
+  });
+};
+
+for (let i = 0; i < effectsPreviews.length; i++) {
+  onClickEffect(effectsPreviews[i], previewsSelectors[i]);
+  effectRadio[i].classList.remove('visually-hidden');
+}
 
 
 const closeForm = () => {
