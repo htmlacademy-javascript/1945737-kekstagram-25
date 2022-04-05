@@ -51,29 +51,95 @@ scaleControlSmaller.addEventListener('click',onClickScContrSmall);
 scaleControlBigger.addEventListener('click',onClickScContrBig);
 
 //эффекты
-const effectRadio = modalPhotoRedactor.querySelectorAll('.effects__radio');
-const effectsPreviews = modalPhotoRedactor.querySelectorAll('.effects__preview');
+const effectItems = modalPhotoRedactor.querySelectorAll('.effects__item');
 
-
-const previewsSelectors = [
-  '.effects__preview--none',
-  '.effects__preview--chrome',
-  '.effects__preview--sepia',
-  '.effects__preview--marvin',
-  '.effects__preview--phobos',
-  '.effects__preview--heat'
-];
-
-const onClickEffect = function (effectsPreview, previewsSelector) {
-  effectsPreview.addEventListener('click', ()=> {
-    photo.classList.add(previewsSelector);
-  });
+const previewsSelectors = {
+  none: 'effects__preview--none',
+  chrome: 'effects__preview--chrome',
+  sepia: 'effects__preview--sepia',
+  marvin: 'effects__preview--marvin',
+  phobos: 'effects__preview--phobos',
+  heat: 'effects__preview--heat'
 };
 
-for (let i = 0; i < effectsPreviews.length; i++) {
-  onClickEffect(effectsPreviews[i], previewsSelectors[i]);
-  effectRadio[i].classList.remove('visually-hidden');
-}
+const setEffectOnPhoto = (effect) => {
+  const allEffectClasses = Object.values(previewsSelectors);
+  photo.classList.remove(...allEffectClasses);
+  photo.classList.add(effect);
+};
+
+const setNewEffect = function (evt) {
+  const element = evt.currentTarget;
+  const radioInput = element.querySelector('.effects__radio');
+  const effectName = radioInput.value;
+  const effectClass = previewsSelectors[effectName];
+  setEffectOnPhoto(effectClass);
+};
+
+effectItems.forEach((effectLabel) => effectLabel.addEventListener('click', setNewEffect));
+
+
+//слайдер
+const effectLevelSlider = document.querySelector('.effect-level__slider');
+const effectLevelValue = document.querySelector('.effect-level__value');
+
+const effectSepia= modalPhotoRedactor.querySelector('#effect-sepia');
+const effectsPreviewSepia= modalPhotoRedactor.querySelector('.effects__preview--sepia');
+
+effectLevelValue.value = '50';
+
+noUiSlider.create(effectLevelSlider, {
+  toltips: true,
+  range: {
+    min: 0,
+    max: 100,
+  },
+  start: 80,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(1);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+effectLevelSlider.noUiSlider.on('update', () => {
+  effectLevelValue.value = effectLevelSlider.noUiSlider.get();
+
+});
+
+effectsPreviewSepia.addEventListener('change', () => {
+  // for ( let i >= 1, i=i+0.1) {
+  // effectSepia.style.filter = 'sepia(0)';
+  // }
+  // effectSepia.style.filter = 'sepia(0)';
+  if (effectSepia.checked) {
+    photo.style.filter = 'sepia(0)';
+  //   effectLevelSlider.noUiSlider.updateOptions({
+  //     range: {
+  //       min: 0,
+  //       max: 1,
+  //     },
+  //     start: 1,
+  //     step: 0.1,
+  //   });
+  // } else {
+  //   effectLevelSlider.noUiSlider.updateOptions({
+  //     range: {
+  //       min: 0,
+  //       max: 100,
+  //     },
+  //     step: 1,
+  //   });
+  }
+});
 
 
 const closeForm = () => {
