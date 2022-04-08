@@ -1,21 +1,26 @@
 import {openBigPicture, closeBigPicture, isCloseBigPicture} from './big-picture.js';
-import {generateIdentifies} from './data.js';
+//import {generateIdentifies} from './data.js';
 import {generateCard} from './user-photos.js';
 import {closeForm, canCloseForm} from './form.js';
 import './validation.js';
+import {setUserFormSubmit} from './validation.js';
+import {getData} from './api.js';
+
 
 const pics = document.querySelector('.pictures');
 
-
-generateIdentifies.forEach((cardData) => {
-  const card = generateCard (cardData);
-  card.addEventListener('click', () => {
+const renderPhotoList = (photoList) => {
+  photoList.forEach((cardData) => {
+    const card = generateCard (cardData);
+    card.addEventListener('click', () => {
     //const element = evt.currentTarget;
     //const id = element.getAtribute('data-id');
-    openBigPicture(cardData);
+      openBigPicture(cardData);
+    });
+    pics.append(card);
   });
-  pics.append(card);
-});
+};
+
 
 const onGlobalClick = (evt) => {
   const element = evt.target;
@@ -23,6 +28,7 @@ const onGlobalClick = (evt) => {
   if (element.closest('.cancel')) {
     closeBigPicture();
     closeForm();
+    // element.style.display = 'none';
   }
 };
 
@@ -38,3 +44,10 @@ const onGlobalKeyDown = (evt) => {
 
 document.addEventListener('click', onGlobalClick);
 document.addEventListener('keydown', onGlobalKeyDown);
+
+
+getData((cardPhoto) => {
+  renderPhotoList(cardPhoto);
+});
+
+setUserFormSubmit(closeForm);

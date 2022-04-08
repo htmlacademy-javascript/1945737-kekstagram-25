@@ -1,3 +1,8 @@
+import {getTemplate} from './util.js';
+import {sendData} from './api.js';
+import { body } from './big-picture.js';
+import {closeForm} from './form.js';
+
 const form = document.querySelector('.img-upload__form');
 const textHashtags = form.querySelector('.text__hashtags');
 const textDescription = form.querySelector('.text__description');
@@ -36,14 +41,40 @@ const pristine = new Pristine(form, {
 pristine.addValidator(textHashtags, allHashtagValidator, mistakeTextHashtag);
 pristine.addValidator(textDescription, validatorDescription, mistakeTextDescription);
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
+const errorTemplate = () => {
+  const error = getTemplate('#error', 'section');
+  closeForm();
+  body.append(error);
+  error.addEventListener('click', () => {
+    error.classList.add('hidden');
+  });
+};
 
-  if (isValid) {
-    form.submit();
-  }
+const successTemplate = () => {
+  const success = getTemplate('#success', 'section');
+  closeForm();
+  body.append(success);
+  success.addEventListener('click', () => {
+    success.classList.add('hidden');
+  });
+};
 
-});
 
-export {textHashtags, textDescription};
+const setUserFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      sendData(
+        () => successTemplate(),
+        () => errorTemplate(),
+        new FormData(evt.target),
+      );
+    }
+    // body.removeChild(body.firstChild);
+    evt.target.reset();
+  });
+};
+
+export {textHashtags, textDescription, setUserFormSubmit, errorTemplate, successTemplate};

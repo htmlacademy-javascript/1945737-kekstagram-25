@@ -15,8 +15,8 @@ const bigPicture = document.querySelector(SELECTORS.bigPicture);
 const image = bigPicture.querySelector(SELECTORS.img);
 const likeCount = bigPicture.querySelector(SELECTORS.like);
 const commentCount = bigPicture.querySelector(SELECTORS.commentsCount);
-const comments = bigPicture.querySelector(SELECTORS.comments);
-const socialComment = bigPicture.querySelector(SELECTORS.socialComment);
+const socialComments = bigPicture.querySelector(SELECTORS.comments);
+const socialCommentCount = bigPicture.querySelector(SELECTORS.socialComment);
 const commentsLoader = bigPicture.querySelector(SELECTORS.commentsLoader);
 const descriptionsText = bigPicture.querySelector(SELECTORS.description);
 const body = document.body;
@@ -39,30 +39,30 @@ const generateCommentLayout = (src, alt, description) => {
   return comment;
 };
 
-const openBigPicture = ({description, comment, likes, url}) => {
+const openBigPicture = ({description, comments, likes, url}) => {
   body.classList.add('modal-open');
-  comments.innerHTML = '';
+  socialComments.innerHTML = '';
   image.src = url;
   descriptionsText.textContent = description;
   likeCount.textContent = likes;
-  socialComment.textContent = '';
-  socialComment.textContent = `5 из ${  comment.length} комментариев`;
+  socialCommentCount.textContent = '';
+  socialCommentCount.textContent = `5 из ${  comments.length} комментариев`;
 
   commentsLoader.classList.remove('hidden');
 
-  if (comment.length <= 5) {
-    socialComment.textContent = `${comment.length} из ${comment.length} комментариев`;
+  if (comments.length <= 5) {
+    socialCommentCount.textContent = `${comments.length} из ${comments.length} комментариев`;
     commentsLoader.classList.add('hidden');
   }
 
-  comment.forEach((data, comentNumber) => {
+  comments.forEach((data, comentNumber) => {
     const {name, message, avatar} = data;
     const commentNode = generateCommentLayout(avatar, name, message);
     if (comentNumber > 4) {
       commentNode.style.display = 'none';
-      commentCount.textContent = `5 из ${  comment.length} комментариев`;
+      commentCount.textContent = `5 из ${  comments.length} комментариев`;
     }
-    comments.append(commentNode);
+    socialComments.append(commentNode);
   });
 
   toggleVisibleBigPicture(true, 'hidden');
@@ -70,7 +70,7 @@ const openBigPicture = ({description, comment, likes, url}) => {
 
 
 commentsLoader.addEventListener('click', () => {
-  const elements = comments.children;
+  const elements = socialComments.children;
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
     el.style.display = 'flex';

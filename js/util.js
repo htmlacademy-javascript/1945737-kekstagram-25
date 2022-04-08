@@ -26,6 +26,7 @@ const toggleVisibleBigPicture = (flag, className) => {
 
 };
 
+
 export {
   getRandomInteger,
   getRandomArrayElement,
