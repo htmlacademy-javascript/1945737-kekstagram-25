@@ -49,7 +49,7 @@ const errorTemplate = () => {
   errorNode.addEventListener('click', () => {
     errorNode.classList.add('hidden');
     errorNode.remove();
-    errorNode.removeEventListener();
+    errorNode.removeEventListener('click');
   });
 };
 
@@ -61,7 +61,7 @@ const successTemplate = () => {
   successNode.addEventListener('click', () => {
     successNode.classList.add('hidden');
     successNode.remove();
-    successNode.removeEventListener();
+    successNode.removeEventListener('click');
   });
 };
 

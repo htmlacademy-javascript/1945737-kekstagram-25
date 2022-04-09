@@ -1,22 +1,22 @@
-const getData = (onSuccess, onError) => () => fetch(
-  'https://25.javascript.pages.academy/kekstagram/data',
-  {
-    method: 'GET',
-    credentials: 'same-origin',
-  },
-)
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-  })
-  .then((data) => {
-    onSuccess(data);
-  })
-  .catch((err) => {
-    onError(err);
-  });
+import {showError} from './util.js';
 
+const getData = (onSuccess) => {
+  fetch('https://25.javascript.pages.academy/kekstagram/data')
+    .then((response) => response.json())
+    .catch(() => {
+      showError('Ошибка загрузки данных. Попробуйте позже');
+    })
+    .then((cardPhoto) => {
+      onSuccess(cardPhoto);
+    })
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        showError('Ошибка загрузки данных. Попробуйте позже');
+      }
+    });
+};
 
 const sendData = (onSuccess, onFail, body) => {
   fetch('https://25.javascript.pages.academy/kekstagram',
