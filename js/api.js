@@ -1,10 +1,22 @@
-const getData = (onSuccess) => {
-  fetch('https://25.javascript.pages.academy/kekstagram/data')
-    .then((response) => response.json())
-    .then((cardPhoto) => {
-      onSuccess(cardPhoto);
-    });
-};
+const getData = (onSuccess, onError) => () => fetch(
+  'https://25.javascript.pages.academy/kekstagram/data',
+  {
+    method: 'GET',
+    credentials: 'same-origin',
+  },
+)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+  })
+  .then((data) => {
+    onSuccess(data);
+  })
+  .catch((err) => {
+    onError(err);
+  });
+
 
 const sendData = (onSuccess, onFail, body) => {
   fetch('https://25.javascript.pages.academy/kekstagram',

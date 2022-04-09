@@ -88,6 +88,9 @@ function onClickScContrBig () {
 scaleControlSmaller.addEventListener('click',onClickScContrSmall);
 scaleControlBigger.addEventListener('click',onClickScContrBig);
 
+const resetPhoto = () => {
+  photo.removeAttribute('src');
+};
 
 //эффекты
 const resetEffects = () => {
@@ -163,4 +166,4 @@ const canCloseForm = () => {
   return !isCloseForm && !isActiveHashtag && !isActiveDescription;
 };
 
-export {closeForm, canCloseForm};
+export {closeForm, canCloseForm, resetPhoto};

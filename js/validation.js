@@ -1,7 +1,7 @@
 import {getTemplate} from './util.js';
 import {sendData} from './api.js';
 import { body } from './big-picture.js';
-import {closeForm} from './form.js';
+import {closeForm, resetPhoto} from './form.js';
 
 const form = document.querySelector('.img-upload__form');
 const textHashtags = form.querySelector('.text__hashtags');
@@ -41,21 +41,27 @@ const pristine = new Pristine(form, {
 pristine.addValidator(textHashtags, allHashtagValidator, mistakeTextHashtag);
 pristine.addValidator(textDescription, validatorDescription, mistakeTextDescription);
 
+const error = getTemplate('#error', 'section');
 const errorTemplate = () => {
-  const error = getTemplate('#error', 'section');
+  const errorNode = error.cloneNode(true);
   closeForm();
-  body.append(error);
-  error.addEventListener('click', () => {
-    error.classList.add('hidden');
+  body.append(errorNode);
+  errorNode.addEventListener('click', () => {
+    errorNode.classList.add('hidden');
+    errorNode.remove();
+    errorNode.removeEventListener();
   });
 };
 
+const success = getTemplate('#success', 'section');
 const successTemplate = () => {
-  const success = getTemplate('#success', 'section');
+  const successNode = success.cloneNode(true);
   closeForm();
-  body.append(success);
-  success.addEventListener('click', () => {
-    success.classList.add('hidden');
+  body.append(successNode);
+  successNode.addEventListener('click', () => {
+    successNode.classList.add('hidden');
+    successNode.remove();
+    successNode.removeEventListener();
   });
 };
 
@@ -67,13 +73,17 @@ const setUserFormSubmit = () => {
 
     if (isValid) {
       sendData(
-        () => successTemplate(),
+        () => {
+          successTemplate();
+          form.reset();
+          // resetFilters()? в resetEffects удаляются все классы. а он используется при закрытии формы в closeForm
+          resetPhoto();
+          closeForm();
+        },
         () => errorTemplate(),
         new FormData(evt.target),
       );
     }
-    // body.removeChild(body.firstChild);
-    evt.target.reset();
   });
 };
 
