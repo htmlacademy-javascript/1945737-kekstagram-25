@@ -46,6 +46,9 @@ const onGlobalKeyDown = (evt) => {
 document.addEventListener('click', onGlobalClick);
 document.addEventListener('keydown', onGlobalKeyDown);
 
+// document.removeEventListener('click', onGlobalClick);
+// document.removeEventListener('keydown', onGlobalKeyDown);
+
 
 getData((cardPhoto) => {
   renderPhotoList(cardPhoto);

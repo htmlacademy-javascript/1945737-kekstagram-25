@@ -1,7 +1,7 @@
 import {getTemplate} from './util.js';
 import {sendData} from './api.js';
 import { body } from './big-picture.js';
-import {closeForm, resetPhoto} from './form.js';
+import {closeForm, resetAttributes} from './form.js';
 
 const form = document.querySelector('.img-upload__form');
 const textHashtags = form.querySelector('.text__hashtags');
@@ -46,10 +46,10 @@ const errorTemplate = () => {
   const errorNode = error.cloneNode(true);
   closeForm();
   body.append(errorNode);
-  errorNode.addEventListener('click', () => {
+  errorNode.addEventListener('click', function getError () {
     errorNode.classList.add('hidden');
     errorNode.remove();
-    errorNode.removeEventListener('click');
+    errorNode.removeEventListener('click', getError());
   });
 };
 
@@ -58,10 +58,10 @@ const successTemplate = () => {
   const successNode = success.cloneNode(true);
   closeForm();
   body.append(successNode);
-  successNode.addEventListener('click', () => {
+  successNode.addEventListener('click', function getSuccess () {
     successNode.classList.add('hidden');
     successNode.remove();
-    successNode.removeEventListener('click');
+    successNode.removeEventListener('click', getSuccess());
   });
 };
 
@@ -77,7 +77,7 @@ const setUserFormSubmit = () => {
           successTemplate();
           form.reset();
           // resetFilters()? в resetEffects удаляются все классы. а он используется при закрытии формы в closeForm
-          resetPhoto();
+          resetAttributes();
           closeForm();
         },
         () => errorTemplate(),

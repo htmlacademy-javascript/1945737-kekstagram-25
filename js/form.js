@@ -62,7 +62,7 @@ file.addEventListener('change', (evt) => {
   photo.src = URL.createObjectURL(evt.target.files[0]);
   scaleControlValue.value = '100%';
   photo.style.transform = 'scale(1)';
-  // evt.target.reset();
+  photo.classList.add('effects__preview--none');
 });
 
 function onClickScContrSmall () {
@@ -88,14 +88,12 @@ function onClickScContrBig () {
 scaleControlSmaller.addEventListener('click',onClickScContrSmall);
 scaleControlBigger.addEventListener('click',onClickScContrBig);
 
-const resetPhoto = () => {
-  photo.removeAttribute('src');
-};
 
 //эффекты
-const resetEffects = () => {
+const resetAttributes = () => {
+  photo.removeAttribute('src');
   photo.style.filter = 'unset';
-  photo.removeAttribute('class');
+  // photo.removeAttribute('class');
 };
 
 const setEffectOnPhoto = (effect) => {
@@ -113,8 +111,8 @@ const setNewEffect = function (evt) {
   const sliderSettingsForEffect = effectsSettings[effectName];
   destroySlider();
   setEffectOnPhoto(effectClass);
-  if (effectName === 'none') {
-    resetEffects();
+  if (effectName.checked) {
+    resetAttributes();
   }
   createRangeSlider(sliderSettingsForEffect);
 };
@@ -155,7 +153,7 @@ function destroySlider () {
 const closeForm = () => {
   body.classList.remove('modal-open');
   modalPhotoRedactor.classList.add('hidden');
-  resetEffects();
+  resetAttributes();
   destroySlider();
 };
 
@@ -166,4 +164,4 @@ const canCloseForm = () => {
   return !isCloseForm && !isActiveHashtag && !isActiveDescription;
 };
 
-export {closeForm, canCloseForm, resetPhoto};
+export {closeForm, canCloseForm, resetAttributes};
