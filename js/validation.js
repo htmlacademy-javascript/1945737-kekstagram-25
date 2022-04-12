@@ -1,7 +1,7 @@
 import {getTemplate} from './util.js';
 import {sendData} from './api.js';
 import { body } from './big-picture.js';
-import {closeForm, resetAttributes} from './form.js';
+import {closeForm, removeFilterStyle, resetAttributes} from './form.js';
 
 const form = document.querySelector('.img-upload__form');
 const textHashtags = form.querySelector('.text__hashtags');
@@ -12,6 +12,8 @@ const mistakeTextDescription = 'длина не больше 140 симв';
 
 const validatorHashtag = (value) => /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/.test(value) || value === '';
 const validatorDescription = (value) => value.length < 141;
+
+const error = getTemplate('#error', 'section');
 
 const hasDouble = (allHashtags) => {
   const countItems = allHashtags.reduce((acc, item) => {
@@ -41,7 +43,7 @@ const pristine = new Pristine(form, {
 pristine.addValidator(textHashtags, allHashtagValidator, mistakeTextHashtag);
 pristine.addValidator(textDescription, validatorDescription, mistakeTextDescription);
 
-const error = getTemplate('#error', 'section');
+
 const errorTemplate = () => {
   const errorNode = error.cloneNode(true);
   closeForm();
@@ -49,7 +51,7 @@ const errorTemplate = () => {
   errorNode.addEventListener('click', function getError () {
     errorNode.classList.add('hidden');
     errorNode.remove();
-    errorNode.removeEventListener('click', getError());
+    errorNode.removeEventListener('click', getError);
   });
 };
 
@@ -61,7 +63,7 @@ const successTemplate = () => {
   successNode.addEventListener('click', function getSuccess () {
     successNode.classList.add('hidden');
     successNode.remove();
-    successNode.removeEventListener('click', getSuccess());
+    successNode.removeEventListener('click', getSuccess);
   });
 };
 
@@ -70,21 +72,28 @@ const setUserFormSubmit = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
-
-    if (isValid) {
-      sendData(
-        () => {
-          successTemplate();
-          form.reset();
-          // resetFilters()? в resetEffects удаляются все классы. а он используется при закрытии формы в closeForm
-          resetAttributes();
-          closeForm();
-        },
-        () => errorTemplate(),
-        new FormData(evt.target),
-      );
+    if (!isValid) {
+      return;
     }
+
+    const onSuccess = () => {
+      successTemplate();
+      form.reset();
+      resetAttributes();
+      closeForm();
+      removeFilterStyle();
+    };
+
+    const onError = () => errorTemplate();
+    const formData = new FormData(evt.target);
+    sendData(onSuccess, onError, formData);
   });
 };
 
-export {textHashtags, textDescription, setUserFormSubmit, errorTemplate, successTemplate};
+export {
+  textHashtags,
+  textDescription,
+  setUserFormSubmit,
+  errorTemplate,
+  successTemplate
+};

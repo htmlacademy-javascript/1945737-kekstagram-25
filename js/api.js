@@ -1,20 +1,18 @@
 import {showError} from './util.js';
-
 const getData = (onSuccess) => {
   fetch('https://25.javascript.pages.academy/kekstagram/data')
-    .then((response) => response.json())
-    .catch(() => {
-      showError('Ошибка загрузки данных. Попробуйте позже');
-    })
-    .then((cardPhoto) => {
-      onSuccess(cardPhoto);
-    })
     .then((response) => {
       if (response.ok) {
-        onSuccess();
+        return response.json();
       } else {
         showError('Ошибка загрузки данных. Попробуйте позже');
       }
+    })
+    .then((data) => {
+      onSuccess(data);
+    })
+    .catch(() => {
+      showError('Ошибка загрузки данных. Попробуйте позже');
     });
 };
 
