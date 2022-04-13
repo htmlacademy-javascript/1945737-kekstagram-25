@@ -69,17 +69,9 @@ setUserFormSubmit();
 
 getData((cardPhoto) => {
   photosFromServer = cardPhoto;
-  renderPhotoList(cardPhoto);
   openFilter();
-  // if (renderPhotoList(cardPhoto) === 'complete') {
-  //   openFilter();
-  // }
+  renderPhotoList(cardPhoto);
 });
-
-//5.2. Блок, с помощью которого производится фильтрация фотографий, скрыт изначально и показывается только после окончания загрузки всех фотографий.
-// window.addEventListener('load', ()=> {
-//   openFilter();
-// });
 
 document.addEventListener('click', onGlobalClick);
 document.addEventListener('keydown', onGlobalKeyDown);
