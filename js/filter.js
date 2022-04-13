@@ -20,7 +20,7 @@ const getRandomPhotos = (photos) => {
   const photosCopy = photos.slice();
   const newPhotos = [];
   for (let index = 0; index < 10; index++) {
-    const generatedRandomItem = getRandomInteger(0, photosCopy.length);
+    const generatedRandomItem = getRandomInteger(0, photosCopy.length - 1);
     newPhotos.push(photosCopy[generatedRandomItem]);
     photosCopy.splice(generatedRandomItem, 1);
   }

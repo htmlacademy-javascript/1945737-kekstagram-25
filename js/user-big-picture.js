@@ -1,5 +1,3 @@
-import {toggleVisibleBigPicture} from './util.js';
-
 const SELECTORS = {
   bigPicture: '.big-picture',
   img: '.big-picture__img img',
@@ -20,8 +18,10 @@ const socialCommentCount = bigPicture.querySelector(SELECTORS.socialComment);
 const commentsLoader = bigPicture.querySelector(SELECTORS.commentsLoader);
 const descriptionsText = bigPicture.querySelector(SELECTORS.description);
 const body = document.body;
+const step = 5;
+let stepNow = 5;
 
-
+//комментарии к большому фото
 const generateCommentLayout = (src, alt, description) => {
   const comment = document.createElement('li');
   comment.classList.add('social__comment');
@@ -33,10 +33,15 @@ const generateCommentLayout = (src, alt, description) => {
   commentImage.alt = alt;
   const text = document.createElement('p');
   text.textContent = description;
-  text.classList.add('social__caption');
+  text.classList.add('social__text');
   comment.append(commentImage);
   comment.append(text);
   return comment;
+};
+
+const toggleVisibleBigPicture = (flag, className) => {
+  const action = flag ? 'remove': 'add';
+  bigPicture.classList[action](className);
 };
 
 const openBigPicture = ({description, comments, likes, url}) => {
@@ -64,20 +69,9 @@ const openBigPicture = ({description, comments, likes, url}) => {
     }
     socialComments.append(commentNode);
   });
-
+  stepNow += step;
   toggleVisibleBigPicture(true, 'hidden');
 };
-
-
-commentsLoader.addEventListener('click', () => {
-  const elements = [socialComments.children];
-  for (let i = 0; i < elements.length; i++) {
-    const el = elements[i];
-    el.style.display = 'flex';
-  }
-  commentsLoader.classList.add('hidden');
-  socialCommentCount.textContent = `${elements.length} из ${  elements.length} комментариев`;
-});
 
 const closeBigPicture = () => {
   body.classList.remove('modal-open');
@@ -86,4 +80,28 @@ const closeBigPicture = () => {
 
 const isCloseBigPicture = () => bigPicture.classList.contains('hidden');
 
-export {openBigPicture, closeBigPicture, bigPicture, isCloseBigPicture, body};
+
+//вывод комментариев по 5
+commentsLoader.addEventListener('click', () => {
+  const elements = [...socialComments.children];
+  for (let i = 0; i < elements.slice(0, stepNow).length; i++) {
+    const el = elements[i];
+    el.style.display = 'flex';
+  }
+  const actualStep = stepNow < elements.length ? stepNow : elements.length;
+  socialCommentCount.textContent = `${actualStep} из ${elements.length} комментариев`;
+  if (stepNow >= elements.length) {
+    commentsLoader.classList.add('hidden');
+    stepNow = step;
+  } else {
+    stepNow += step;
+  }
+});
+
+export {
+  openBigPicture,
+  closeBigPicture,
+  bigPicture,
+  isCloseBigPicture,
+  body
+};

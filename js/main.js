@@ -1,15 +1,16 @@
-import {openBigPicture, closeBigPicture, isCloseBigPicture} from './big-picture.js';
+import {openBigPicture, closeBigPicture, isCloseBigPicture} from './user-big-picture.js';
 import {generateCard} from './user-photos.js';
 import {closeForm, canCloseForm} from './form.js';
-import {setUserFormSubmit} from './validation.js';
+import {setUserFormSubmit} from './form-validation.js';
 import {getData} from './api.js';
-import { openFilter, setActiveFilterButton, filtersFunctionSortMap } from './filter.js';
-import { isEscapeKey, debounce } from './util.js';
-
+import {openFilter, setActiveFilterButton, filtersFunctionSortMap} from './filter.js';
+import {isEscapeKey, debounce} from './util.js';
 
 const pictures = document.querySelector('.pictures');
 
 let photosFromServer = [];
+
+const RERENDER_DELAY = 500;
 
 const renderPhotoList = (photoList) => {
   photoList.forEach((cardData) => {
@@ -26,6 +27,17 @@ const deleteLastPhotos = () => {
   allLastPhoto.forEach((photo) => photo.remove());
 };
 
+const renderSortingPhoto = (button) => {
+  const filterType = button.getAttribute('id');
+  setActiveFilterButton(button);
+  const sortFunction = filtersFunctionSortMap[filterType];
+  const newPhoto = sortFunction(photosFromServer);
+  deleteLastPhotos();
+  renderPhotoList(newPhoto);
+};
+
+const debounceRenderSortingPhoto = debounce((button) => renderSortingPhoto (button), RERENDER_DELAY);
+
 const onGlobalClick = (evt) => {
   const element = evt.target;
   const isClosetButton = element.closest('.cancel');
@@ -38,20 +50,9 @@ const onGlobalClick = (evt) => {
   }
 
   if (isFilterButton) {
-    const filterType = element.getAttribute('id');
-    setActiveFilterButton(isFilterButton);
-    const sortFunction = filtersFunctionSortMap[filterType];
-    const newPhoto = sortFunction(photosFromServer);
-    deleteLastPhotos();
-    renderPhotoList(newPhoto);
-    // const RERENDER_DELAY = 500;
-    // openFilter(debounce(
-    //   () => renderPhotoList(newPhoto),
-    //   RERENDER_DELAY,
-    // ));
+    debounceRenderSortingPhoto(isFilterButton);
   }
 };
-
 
 const onGlobalKeyDown = (evt) => {
   const key = evt.keyCode;
@@ -64,20 +65,13 @@ const onGlobalKeyDown = (evt) => {
   }
 };
 
-
 setUserFormSubmit();
 
 getData((cardPhoto) => {
   photosFromServer = cardPhoto;
   openFilter();
   renderPhotoList(cardPhoto);
-  // openFilter(debounce(
-  //   () => renderPhotoList(cardPhoto),
-  //   RERENDER_DELAY,
-  // ));
 });
-
-debounce();//ESlint
 
 document.addEventListener('click', onGlobalClick);
 document.addEventListener('keydown', onGlobalKeyDown);
