@@ -1,5 +1,5 @@
-import {body} from './big-picture.js';
-import {textHashtags, textDescription} from './validation.js';
+import {body} from './user-big-picture.js';
+import {textHashtags, textDescription} from './form-validation.js';
 
 const file = document.querySelector('#upload-file');
 const modalPhotoRedactor = document.querySelector('.img-upload__overlay');
@@ -55,17 +55,8 @@ const effectsSettings = {
 };
 
 
-//масштаб изображения
-file.addEventListener('change', (evt) => {
-  modalPhotoRedactor.classList.remove('hidden');
-  body.classList.add('modal-open');
-  photo.src = URL.createObjectURL(evt.target.files[0]);
-  scaleControlValue.value = '100%';
-  photo.style.transform = 'scale(1)';
-  photo.classList.add('effects__preview--none');
-});
-
-function onClickScContrSmall () {
+//масштаб изображения, эффекты
+const onClickScContrSmall = function () {
   const value = scaleControlValue.value;
   const newValue = parseInt(value, 10) - step;
   if (newValue <= 0) {
@@ -73,10 +64,9 @@ function onClickScContrSmall () {
   }
   scaleControlValue.value = `${newValue  }%`;
   photo.style.transform = `scale(${newValue/100})`;
-}
+};
 
-// TODO change function to const = () =>
-function onClickScContrBig () {
+const onClickScContrBig = function () {
   const value = scaleControlValue.value;
   const newValue = parseInt(value, 10) + step;
   if (newValue > 100) {
@@ -84,50 +74,34 @@ function onClickScContrBig () {
   }
   scaleControlValue.value = `${newValue  }%`;
   photo.style.transform = `scale(${newValue/100})`;
-}
+};
 
-scaleControlSmaller.addEventListener('click',onClickScContrSmall);
-scaleControlBigger.addEventListener('click',onClickScContrBig);
-
-const removeAllFilterClasses = () => {
+const removeAllEffectClasses = () => {
   const allEffectClasses = Object.values(previewsSelectors);
   photo.classList.remove(...allEffectClasses);
 };
 
-//эффекты
 const resetAttributes = () => {
   photo.removeAttribute('src');
-  removeAllFilterClasses();
+  removeAllEffectClasses();
 };
 
-const removeFilterStyle = () => {
+const removePhotoTransformStyle = () => {
+  photo.style.transform = 'unset';
+};
+
+const removePhotoFilterStyle = () => {
   photo.style.filter = 'unset';
 };
 
 const setEffectOnPhoto = (effect) => {
-  removeAllFilterClasses();
+  removeAllEffectClasses();
   photo.classList.add(effect);
 };
 
-const setNewEffect = function (evt) {
-  const element = evt.currentTarget;
-  const radioInput = element.querySelector('.effects__radio');
-  const effectName = radioInput.value;
-  const effectClass = previewsSelectors[effectName];
-  const sliderSettingsForEffect = effectsSettings[effectName];
-  destroySlider();
-  removeFilterStyle();
-  setEffectOnPhoto(effectClass);
-  if (effectName !== 'none') {
-    createRangeSlider(sliderSettingsForEffect);
-  }
-};
-
-effectItems.forEach((effectLabel) => effectLabel.addEventListener('click', setNewEffect));
-
 
 //слайдер
-function createRangeSlider ({stepSlider, max, css}) {
+const createRangeSlider = function ({stepSlider, max, css}) {
   const slider = noUiSlider.create(effectLevelSlider, {
     start: max,
     step: stepSlider,
@@ -145,14 +119,28 @@ function createRangeSlider ({stepSlider, max, css}) {
     photo.style.filter = cssValue;
     effectLevelValue.value = value;
   });
-}
+};
 
-function destroySlider () {
+const destroySlider = function () {
   if (!effectLevelSlider.noUiSlider) {
     return;
   }
   effectLevelSlider.noUiSlider.destroy();
-}
+};
+
+const setNewEffect = function (evt) {
+  const element = evt.currentTarget;
+  const radioInput = element.querySelector('.effects__radio');
+  const effectName = radioInput.value;
+  const effectClass = previewsSelectors[effectName];
+  const sliderSettingsForEffect = effectsSettings[effectName];
+  destroySlider();
+  removePhotoFilterStyle();
+  setEffectOnPhoto(effectClass);
+  if (effectName !== 'none') {
+    createRangeSlider(sliderSettingsForEffect);
+  }
+};
 
 
 //закрытие формы
@@ -161,7 +149,8 @@ const closeForm = () => {
   modalPhotoRedactor.classList.add('hidden');
   resetAttributes();
   destroySlider();
-  removeFilterStyle();
+  removePhotoTransformStyle();
+  removePhotoFilterStyle();
 };
 
 const canCloseForm = () => {
@@ -171,9 +160,24 @@ const canCloseForm = () => {
   return !isCloseForm && !isActiveHashtag && !isActiveDescription;
 };
 
+
+//обработчики
+file.addEventListener('change', (evt) => {
+  modalPhotoRedactor.classList.remove('hidden');
+  body.classList.add('modal-open');
+  photo.src = URL.createObjectURL(evt.target.files[0]);
+  scaleControlValue.value = '100%';
+  photo.style.transform = 'scale(1)';
+  photo.classList.add('effects__preview--none');
+});
+
+effectItems.forEach((effectLabel) => effectLabel.addEventListener('click', setNewEffect));
+
+scaleControlSmaller.addEventListener('click',onClickScContrSmall);
+scaleControlBigger.addEventListener('click',onClickScContrBig);
+
 export {
   closeForm,
   canCloseForm,
-  resetAttributes,
-  removeFilterStyle
+  resetAttributes
 };

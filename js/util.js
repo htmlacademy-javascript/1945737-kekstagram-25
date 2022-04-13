@@ -1,5 +1,3 @@
-import {bigPicture} from './big-picture.js';
-
 const getRandomInteger = (min,max) => {
   min = Math.abs(min);
   max = Math.abs(max);
@@ -9,21 +7,15 @@ const getRandomInteger = (min,max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-function maxLengthString (string,maxLenght) {
+const maxLengthString = function (string,maxLenght) {
   return string.length <= maxLenght;
-}
+};
 
 const getTemplate = function (templateID, contentTag) {
   const template = document.querySelector(templateID).content;
   const content = template.querySelector(contentTag);
   const clonedContent = content.cloneNode(true);
   return clonedContent;
-};
-
-const toggleVisibleBigPicture = (flag, className) => {
-  const action = flag ? 'remove': 'add';
-  bigPicture.classList[action](className);
-
 };
 
 const isEscapeKey = (key) => key === 27;
@@ -39,9 +31,7 @@ const showError = (message) => {
   errorContainer.style.fontSize = '30px';
   errorContainer.style.textAlign = 'center';
   errorContainer.style.backgroundColor = 'red';
-
   errorContainer.textContent = message;
-
   document.body.append(errorContainer);
 };
 
@@ -58,7 +48,6 @@ export {
   getRandomArrayElement,
   maxLengthString,
   getTemplate,
-  toggleVisibleBigPicture,
   showError,
   isEscapeKey,
   debounce
