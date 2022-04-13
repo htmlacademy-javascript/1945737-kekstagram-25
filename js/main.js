@@ -1,54 +1,83 @@
 import {openBigPicture, closeBigPicture, isCloseBigPicture} from './big-picture.js';
-//import {generateIdentifies} from './data.js';
 import {generateCard} from './user-photos.js';
 import {closeForm, canCloseForm} from './form.js';
-import './validation.js';
 import {setUserFormSubmit} from './validation.js';
 import {getData} from './api.js';
-import './filter.js';
+import { openFilter, setActiveFilterButton, filtersFunctionSortMap } from './filter.js';
+import { isEscapeKey, debounce } from './util.js';
 
 
-const pics = document.querySelector('.pictures');
+const pictures = document.querySelector('.pictures');
+
+let photosFromServer = [];
 
 const renderPhotoList = (photoList) => {
   photoList.forEach((cardData) => {
     const card = generateCard (cardData);
     card.addEventListener('click', () => {
-    //const element = evt.currentTarget;
-    //const id = element.getAtribute('data-id');
       openBigPicture(cardData);
     });
-    pics.append(card);
+    pictures.append(card);
   });
 };
 
+const deleteLastPhotos = () => {
+  const allLastPhoto = pictures.querySelectorAll('.picture');
+  allLastPhoto.forEach((photo) => photo.remove());
+};
 
 const onGlobalClick = (evt) => {
   const element = evt.target;
+  const isClosetButton = element.closest('.cancel');
+  const isFilterButton = element.closest('.img-filters__button');
 
-  if (element.closest('.cancel')) {
+  if (isClosetButton) {
     closeBigPicture();
     closeForm();
-    // element.style.display = 'none';
+    return;
+  }
+
+  if (isFilterButton) {
+    const filterType = element.getAttribute('id');
+    setActiveFilterButton(isFilterButton);
+    const sortFunction = filtersFunctionSortMap[filterType];
+    const newPhoto = sortFunction(photosFromServer);
+    deleteLastPhotos();
+    renderPhotoList(newPhoto);
+    // const RERENDER_DELAY = 500;
+    // openFilter(debounce(
+    //   () => renderPhotoList(newPhoto),
+    //   RERENDER_DELAY,
+    // ));
   }
 };
+
 
 const onGlobalKeyDown = (evt) => {
   const key = evt.keyCode;
-  if (key === 27 && !isCloseBigPicture()) {
+  if (isEscapeKey(key) && !isCloseBigPicture()) {
     closeBigPicture();
+    return;
   }
-  if (key === 27 && canCloseForm()) {
+  if (isEscapeKey(key) && canCloseForm()) {
     closeForm();
   }
 };
 
-document.addEventListener('click', onGlobalClick);
-document.addEventListener('keydown', onGlobalKeyDown);
 
+setUserFormSubmit();
 
 getData((cardPhoto) => {
+  photosFromServer = cardPhoto;
+  openFilter();
   renderPhotoList(cardPhoto);
+  // openFilter(debounce(
+  //   () => renderPhotoList(cardPhoto),
+  //   RERENDER_DELAY,
+  // ));
 });
 
-setUserFormSubmit(closeForm);
+debounce();//ESlint
+
+document.addEventListener('click', onGlobalClick);
+document.addEventListener('keydown', onGlobalKeyDown);

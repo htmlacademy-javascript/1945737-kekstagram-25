@@ -14,6 +14,9 @@ const step = 25;
 
 const effectItems = modalPhotoRedactor.querySelectorAll('.effects__item');
 
+const effectLevelSlider = document.querySelector('.effect-level__slider');
+const effectLevelValue = document.querySelector('.effect-level__value');
+
 const previewsSelectors = {
   none: 'effects__preview--none',
   chrome: 'effects__preview--chrome',
@@ -51,9 +54,6 @@ const effectsSettings = {
   },
 };
 
-const effectLevelSlider = document.querySelector('.effect-level__slider');
-const effectLevelValue = document.querySelector('.effect-level__value');
-
 
 //масштаб изображения
 file.addEventListener('change', (evt) => {
@@ -62,7 +62,7 @@ file.addEventListener('change', (evt) => {
   photo.src = URL.createObjectURL(evt.target.files[0]);
   scaleControlValue.value = '100%';
   photo.style.transform = 'scale(1)';
-  // evt.target.reset();
+  photo.classList.add('effects__preview--none');
 });
 
 function onClickScContrSmall () {
@@ -75,6 +75,7 @@ function onClickScContrSmall () {
   photo.style.transform = `scale(${newValue/100})`;
 }
 
+// TODO change function to const = () =>
 function onClickScContrBig () {
   const value = scaleControlValue.value;
   const newValue = parseInt(value, 10) + step;
@@ -88,22 +89,25 @@ function onClickScContrBig () {
 scaleControlSmaller.addEventListener('click',onClickScContrSmall);
 scaleControlBigger.addEventListener('click',onClickScContrBig);
 
-const resetPhoto = () => {
-  photo.removeAttribute('src');
+const removeAllFilterClasses = () => {
+  const allEffectClasses = Object.values(previewsSelectors);
+  photo.classList.remove(...allEffectClasses);
 };
 
 //эффекты
-const resetEffects = () => {
+const resetAttributes = () => {
+  photo.removeAttribute('src');
+  removeAllFilterClasses();
+};
+
+const removeFilterStyle = () => {
   photo.style.filter = 'unset';
-  photo.removeAttribute('class');
 };
 
 const setEffectOnPhoto = (effect) => {
-  const allEffectClasses = Object.values(previewsSelectors);
-  photo.classList.remove(...allEffectClasses);
+  removeAllFilterClasses();
   photo.classList.add(effect);
 };
-
 
 const setNewEffect = function (evt) {
   const element = evt.currentTarget;
@@ -112,11 +116,11 @@ const setNewEffect = function (evt) {
   const effectClass = previewsSelectors[effectName];
   const sliderSettingsForEffect = effectsSettings[effectName];
   destroySlider();
+  removeFilterStyle();
   setEffectOnPhoto(effectClass);
-  if (effectName === 'none') {
-    resetEffects();
+  if (effectName !== 'none') {
+    createRangeSlider(sliderSettingsForEffect);
   }
-  createRangeSlider(sliderSettingsForEffect);
 };
 
 effectItems.forEach((effectLabel) => effectLabel.addEventListener('click', setNewEffect));
@@ -155,8 +159,9 @@ function destroySlider () {
 const closeForm = () => {
   body.classList.remove('modal-open');
   modalPhotoRedactor.classList.add('hidden');
-  resetEffects();
+  resetAttributes();
   destroySlider();
+  removeFilterStyle();
 };
 
 const canCloseForm = () => {
@@ -166,4 +171,9 @@ const canCloseForm = () => {
   return !isCloseForm && !isActiveHashtag && !isActiveDescription;
 };
 
-export {closeForm, canCloseForm, resetPhoto};
+export {
+  closeForm,
+  canCloseForm,
+  resetAttributes,
+  removeFilterStyle
+};

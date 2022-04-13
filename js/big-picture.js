@@ -55,10 +55,10 @@ const openBigPicture = ({description, comments, likes, url}) => {
     commentsLoader.classList.add('hidden');
   }
 
-  comments.forEach((data, comentNumber) => {
+  comments.forEach((data, commentNumber) => {
     const {name, message, avatar} = data;
     const commentNode = generateCommentLayout(avatar, name, message);
-    if (comentNumber > 4) {
+    if (commentNumber > 4) {
       commentNode.style.display = 'none';
       commentCount.textContent = `5 из ${  comments.length} комментариев`;
     }
@@ -70,13 +70,13 @@ const openBigPicture = ({description, comments, likes, url}) => {
 
 
 commentsLoader.addEventListener('click', () => {
-  const elements = socialComments.children;
+  const elements = [socialComments.children];
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
     el.style.display = 'flex';
   }
   commentsLoader.classList.add('hidden');
-  commentCount.textContent = `${elements.length  } из ${  elements.length}`;
+  socialCommentCount.textContent = `${elements.length} из ${  elements.length} комментариев`;
 });
 
 const closeBigPicture = () => {

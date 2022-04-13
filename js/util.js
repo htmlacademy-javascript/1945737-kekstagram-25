@@ -26,6 +26,8 @@ const toggleVisibleBigPicture = (flag, className) => {
 
 };
 
+const isEscapeKey = (key) => key === 27;
+
 const showError = (message) => {
   const errorContainer = document.createElement('div');
   errorContainer.style.zIndex = 100;
@@ -43,11 +45,21 @@ const showError = (message) => {
   document.body.append(errorContainer);
 };
 
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   maxLengthString,
   getTemplate,
   toggleVisibleBigPicture,
-  showError
+  showError,
+  isEscapeKey,
+  debounce
 };
