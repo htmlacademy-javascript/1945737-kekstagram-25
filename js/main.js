@@ -69,8 +69,8 @@ setUserFormSubmit();
 
 getData((cardPhoto) => {
   photosFromServer = cardPhoto;
-  openFilter();
   renderPhotoList(cardPhoto);
+  openFilter();
 });
 
 document.addEventListener('click', onGlobalClick);
