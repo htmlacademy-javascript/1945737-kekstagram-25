@@ -8,7 +8,7 @@ import {isEscapeKey, debounce} from './util.js';
 
 const pictures = document.querySelector('.pictures');
 
-let photosFromServer = [];
+let serverPhotos = [];
 
 const RERENDER_DELAY = 500;
 
@@ -31,7 +31,7 @@ const renderSortingPhoto = (button) => {
   const filterType = button.getAttribute('id');
   setActiveFilterButton(button);
   const sortFunction = filtersFunctionSortMap[filterType];
-  const newPhoto = sortFunction(photosFromServer);
+  const newPhoto = sortFunction(serverPhotos);
   deleteLastPhotos();
   renderPhotoList(newPhoto);
 };
@@ -68,7 +68,7 @@ const onGlobalKeyDown = (evt) => {
 setUserFormSubmit();
 
 getData((cardPhoto) => {
-  photosFromServer = cardPhoto;
+  serverPhotos = cardPhoto;
   renderPhotoList(cardPhoto);
   openFilter();
 });

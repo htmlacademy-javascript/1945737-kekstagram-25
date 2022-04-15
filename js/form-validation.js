@@ -12,8 +12,8 @@ const mistakeTextDescription = 'Длина текста не более 140 си
 const error = getTemplate('#error', 'section');
 const success = getTemplate('#success', 'section');
 
-const validatorHashtag = (value) => /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/.test(value) || value === '';
-const validatorDescription = (value) => value.length < 141;
+const getValidatorHashtag = (value) => /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/.test(value) || value === '';
+const getValidatorDescription = (value) => value.length < 141;
 
 const hasDouble = (allHashtags) => {
   const countItems = allHashtags.reduce((acc, item) => {
@@ -24,9 +24,9 @@ const hasDouble = (allHashtags) => {
   return count.every((number) => number === 1);
 };
 
-const allHashtagValidator = (value) => {
+const getAllHashtagValidator = (value) => {
   const allHashtags = value.split(' ');
-  const isValidHashtag = allHashtags.every(validatorHashtag);
+  const isValidHashtag = allHashtags.every(getValidatorHashtag);
   const amountHashtags = allHashtags.length < 6;
   const isNotDouble = hasDouble(allHashtags);
   return isValidHashtag && isNotDouble && amountHashtags;
@@ -38,12 +38,12 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error-text',
 });
 
-pristine.addValidator(textDescription, validatorDescription, mistakeTextDescription);
-pristine.addValidator(textHashtags, allHashtagValidator, mistakeTextHashtag);
+pristine.addValidator(textDescription, getValidatorDescription, mistakeTextDescription);
+pristine.addValidator(textHashtags, getAllHashtagValidator, mistakeTextHashtag);
 
 
 //сообщения о неудачной/успешной отправке
-const errorTemplate = () => {
+const getErrorTemplate = () => {
   const errorNode = error.cloneNode(true);
   closeForm();
   body.append(errorNode);
@@ -54,7 +54,7 @@ const errorTemplate = () => {
   });
 };
 
-const successTemplate = () => {
+const getSuccessTemplate = () => {
   const successNode = success.cloneNode(true);
   closeForm();
   body.append(successNode);
@@ -69,18 +69,18 @@ const successTemplate = () => {
 const setUserFormSubmit = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    const isValid = pristine.validate();
+    const isValid = pristine.validate(true);
     if (!isValid) {
       return;
     }
 
     const onSuccess = () => {
-      successTemplate();
+      getSuccessTemplate();
       form.reset();
     };
 
     const onError = () => {
-      errorTemplate();
+      getErrorTemplate();
       form.reset();
     };
 
@@ -92,7 +92,5 @@ const setUserFormSubmit = () => {
 export {
   textHashtags,
   textDescription,
-  setUserFormSubmit,
-  errorTemplate,
-  successTemplate
+  setUserFormSubmit
 };
