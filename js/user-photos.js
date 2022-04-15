@@ -5,7 +5,7 @@ const pictureTemplate = getTemplate('#picture', 'a');
 const pictureTitle = document.querySelector('.pictures__title');
 pictureTitle.classList.remove('visually-hidden');
 
-const generateCard = function ({url, likes, comments, id}) {
+const generateCard = ({url, likes, comments, id}) => {
   const picture = pictureTemplate.cloneNode(true);
   picture.querySelector('.picture__img').src = url;
   picture.querySelector('.picture__likes').textContent = likes;

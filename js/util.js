@@ -7,11 +7,9 @@ const getRandomInteger = (min,max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const maxLengthString = function (string,maxLenght) {
-  return string.length <= maxLenght;
-};
+const getMaxLengthString = (string,maxLenght) => string.length <= maxLenght;
 
-const getTemplate = function (templateID, contentTag) {
+const getTemplate = (templateID, contentTag) => {
   const template = document.querySelector(templateID).content;
   const content = template.querySelector(contentTag);
   const clonedContent = content.cloneNode(true);
@@ -46,7 +44,7 @@ const debounce = (callback, timeoutDelay) => {
 export {
   getRandomInteger,
   getRandomArrayElement,
-  maxLengthString,
+  getMaxLengthString,
   getTemplate,
   showError,
   isEscapeKey,
